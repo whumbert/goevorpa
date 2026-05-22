@@ -1,6 +1,6 @@
 from core.artifact_manager import ArtifactManager
 from core.updater import Updater
-from modules.utils.general.data import Data
+from automations.solutionerp.common.data import Data
 from modules.utils.general.env import DotEnv
 from modules.utils.general.envupdate import EnvUpdate
 from core.api import Api
@@ -93,7 +93,7 @@ class Main:
 
                 _guid = response["RPA_GUID"]
                 _use_case = response["RPA_SOURCE"]
-                _data = Data.from_raw(loads(response["RPA_PARAMS"]))
+                _data = loads(response["RPA_PARAMS"])
                 _system = DotEnv().get('APPLICATION')
 
                 result, msg = worker(_guid, _system, _use_case, _data)

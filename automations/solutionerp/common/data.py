@@ -156,48 +156,48 @@ class Data:
                 processed[upper_key] = _clean_string(value)
 
         # =========================================================================
-        # 2. APLICAÇÃO DA REGRA DE FALLBACK (PSU_GERAL, PSU_CONTA, PSU_CC)
+        # 2. APLICAÇÃO DA REGRA DE FALLBACK (PSU_GERAL, PSU_CONTA, PSU_CC) (Adicional e especifico para rotinas de inserção de NF
         # =========================================================================
-        itens = processed.get("ITENS_CONCATENADOS", [])
-
-        if itens:
-            primeiro_item = itens[0]
-
-            # Captura tolerante a letras maiúsculas/minúsculas vindas do banco
-            item_cc = primeiro_item.get("cc") or primeiro_item.get("CC", "")
-            item_dcc = primeiro_item.get("dcc") or primeiro_item.get("DCC", "")
-            item_conta = primeiro_item.get("conta") or primeiro_item.get("CONTA", "")
-            item_dconta = primeiro_item.get("dconta") or primeiro_item.get("DCONTA", "")
-
-            # Valor: tenta pegar o total do item, se não achar usa o total geral da nota
-            item_total = primeiro_item.get("total") or primeiro_item.get("TOTAL") or processed.get("PSE_TOTAL", "0")
-
-            item_total = Decimal(item_total) - Decimal(primeiro_item.get('vldesc'))
-
-            # Se o PSU_GERAL (usado na nova rotina) estiver vazio, gera a linha padrão
-            if not processed.get("PSU_GERAL"):
-                processed["PSU_GERAL"] = [{
-                    "cc": item_cc,
-                    "dcc": item_dcc,
-                    "conta": item_conta,
-                    "dconta": item_dconta,
-                    "valor": item_total
-                }]
-
-            # Mantém compatibilidade com módulos antigos que usem PSU_CONTA
-            if not processed.get("PSU_CONTA"):
-                processed["PSU_CONTA"] = [{
-                    "conta": item_conta,
-                    "dconta": item_dconta,
-                    "valor": item_total
-                }]
-
-            # Mantém compatibilidade com módulos antigos que usem PSU_CC
-            if not processed.get("PSU_CC"):
-                processed["PSU_CC"] = [{
-                    "cc": item_cc,
-                    "dcc": item_dcc,
-                    "valor": item_total
-                }]
+        # itens = processed.get("ITENS_CONCATENADOS", [])
+        #
+        # if itens:
+        #     primeiro_item = itens[0]
+        #
+        #     # Captura tolerante a letras maiúsculas/minúsculas vindas do banco
+        #     item_cc = primeiro_item.get("cc") or primeiro_item.get("CC", "")
+        #     item_dcc = primeiro_item.get("dcc") or primeiro_item.get("DCC", "")
+        #     item_conta = primeiro_item.get("conta") or primeiro_item.get("CONTA", "")
+        #     item_dconta = primeiro_item.get("dconta") or primeiro_item.get("DCONTA", "")
+        #
+        #     # Valor: tenta pegar o total do item, se não achar usa o total geral da nota
+        #     item_total = primeiro_item.get("total") or primeiro_item.get("TOTAL") or processed.get("PSE_TOTAL", "0")
+        #
+        #     item_total = Decimal(item_total) - Decimal(primeiro_item.get('vldesc'))
+        #
+        #     # Se o PSU_GERAL (usado na nova rotina) estiver vazio, gera a linha padrão
+        #     if not processed.get("PSU_GERAL"):
+        #         processed["PSU_GERAL"] = [{
+        #             "cc": item_cc,
+        #             "dcc": item_dcc,
+        #             "conta": item_conta,
+        #             "dconta": item_dconta,
+        #             "valor": item_total
+        #         }]
+        #
+        #     # Mantém compatibilidade com módulos antigos que usem PSU_CONTA
+        #     if not processed.get("PSU_CONTA"):
+        #         processed["PSU_CONTA"] = [{
+        #             "conta": item_conta,
+        #             "dconta": item_dconta,
+        #             "valor": item_total
+        #         }]
+        #
+        #     # Mantém compatibilidade com módulos antigos que usem PSU_CC
+        #     if not processed.get("PSU_CC"):
+        #         processed["PSU_CC"] = [{
+        #             "cc": item_cc,
+        #             "dcc": item_dcc,
+        #             "valor": item_total
+        #         }]
 
         return cls(processed)
